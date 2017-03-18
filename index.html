@@ -14,6 +14,7 @@ a { text-decoration: none; padding-left: 1em; padding-right: 1em; border-radius:
 input:disabled { background:#ccc ! important; border-color: #ccc ! important; text-shadow:none; }
 .debug { line-height: 1.2em; color: #1EAEDB ! important; display: none; }
 .user-row { box-shadow: 5px 5px 2px gray; border-radius: 4px; padding: 2px 2px 2px 2px; }
+.wide { margin-left: 1em; }
 
 table { margin:1em auto; }
 td { height:30px;
@@ -50,7 +51,7 @@ function sample(text, n) {
 class Sudoku extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {kanji: "", board: [], level: ""}
+        this.state = {kanji: [], board: [], level: ""}
         this.generate = this.generate.bind(this);
         this.render_row = this.render_row.bind(this);
         this.render_cell = this.render_cell.bind(this);
@@ -58,7 +59,7 @@ class Sudoku extends React.Component {
     }
 
     componentDidMount() { this.generate(); }
-    componentWillUnmount() { this.setState({kanji: "", board: []}) }
+    componentWillUnmount() { this.setState({kanji: [], board: []}) }
 
     generate(level="grade1") {
         // real logic goes here
@@ -91,7 +92,7 @@ class Sudoku extends React.Component {
             <div className="container">
                 {Object.keys(kanji).map((key) => this.render_button(key))}
             </div>
-            <h4>{this.state.kanji}</h4>
+            <h4>{this.state.kanji.map((k) => <span className="wide" key={k}>{k}</span>)}</h4>
             <table><tbody>
             {this.state.board.map(this.render_row)}
             </tbody></table>
