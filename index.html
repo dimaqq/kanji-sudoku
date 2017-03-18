@@ -14,18 +14,23 @@ a { text-decoration: none; padding-left: 1em; padding-right: 1em; border-radius:
 input:disabled { background:#ccc ! important; border-color: #ccc ! important; text-shadow:none; }
 .debug { line-height: 1.2em; color: #1EAEDB ! important; display: none; }
 .user-row { box-shadow: 5px 5px 2px gray; border-radius: 4px; padding: 2px 2px 2px 2px; }
-.wide { margin-left: 1em; }
+.wide { margin-left: 0.5em; margin-right: 0.5em; }
 
-span.sudoku, table.sudoku { font-size: 180%; -webkit-border-horizontal-spacing: 0; -webkit-border-vertical-spacing: 0; }
-td { height: 2em;
-     width: 2em;
-     border: 1px solid;
-     text-align: center; }
+.kcont, table.sudoku {
+    display: table;
+    border-collapse: collapse;
+    font-size: 180%;
+    -webkit-border-horizontal-spacing: 0;
+    -webkit-border-vertical-spacing: 0; 
+    margin-left: auto; margin-right: auto; }
+td { height: 2em; width: 2em; border: 1px solid; text-align: center; }
 td, th:first-child, td:first-child, th:last-child, td:last-child { padding: 0.1em 0.1em 0.1em 0.1em; margin: 0 0 0 0; }
-td:first-child { border-left:solid; }
-td:nth-child(3n) { border-right:solid ; }
-tr:first-child { border-top:solid; }
+td:first-child { border-left:3px solid; }
+td:nth-child(3n) { border-right:2px solid; }
+td:last-child { border-right:3px solid; }
+tr:first-child { border-top:3px solid; }
 tr:nth-child(3n) td { border-bottom:solid ; }
+tr:last-child { border-bottom: 3px solid; }
 
 </style>
 <style type="text/css" media="print">
@@ -105,17 +110,19 @@ class Sudoku extends React.Component {
         return (
             <div className="sudoku">
             <div className="container">
-            <div className="row noprint">
+            <div className="row noprint"><div className="twelve columns">
                 {Object.keys(kanji).map((key) => this.render_button(key))}
-            </div>
+            </div></div>
             <div className="row">
             <div className="twelve columns">
-            <div>{this.state.kanji.map((k) => <span className="sudoku wide" key={k}>{k}</span>)}</div>
+            <div className="kcont">{this.state.kanji.map((k) => <span className="sudoku wide" key={k}>{k}</span>)}</div>
             </div>
             </div>
-            <table className="sudoku"><tbody>
+            <div className="row tabcontainer">
+            <table className="sudoku" align="center"><tbody>
                 {this.state.board.map(this.render_row)}
             </tbody></table>
+            </div>
             </div>
             <pre className="debug">{"# period state\n" + JSON.stringify(this.state, null, "\t")}</pre>
             </div>
