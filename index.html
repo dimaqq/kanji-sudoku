@@ -13,17 +13,18 @@ a { text-decoration: none; padding-left: 1em; padding-right: 1em; border-radius:
 .registration { max-width: 400px; }
 input:disabled { background:#ccc ! important; border-color: #ccc ! important; text-shadow:none; }
 .debug { line-height: 1.2em; color: #1EAEDB ! important; display: none; }
-.user-row { box-shadow: 5px 5px 2px gray; border-radius: 4px; padding: 2px 2px 2px 2px; }
-.wide { margin-left: 0.5em; margin-right: 0.5em; }
+.wide { margin-left: 0.2em; margin-right: 0.2em; }
+// .row { width: 100%; }
+//.button { padding: 1em ! important; }
+.one-and-half { width: 8%; }
 
 .kcont, table.sudoku {
     display: table;
     border-collapse: collapse;
-    font-size: 180%;
     -webkit-border-horizontal-spacing: 0;
     -webkit-border-vertical-spacing: 0; 
     margin-left: auto; margin-right: auto; }
-td { height: 2em; width: 2em; border: 1px solid; text-align: center; }
+td { height: 1.6em; width: 1.6em; border: 1px solid; text-align: center; }
 td, th:first-child, td:first-child, th:last-child, td:last-child { padding: 0.1em 0.1em 0.1em 0.1em; margin: 0 0 0 0; }
 td:first-child { border-left:3px solid; }
 td:nth-child(3n) { border-right:2px solid; }
@@ -35,6 +36,10 @@ tr:last-child { border-bottom: 3px solid; }
 </style>
 <style type="text/css" media="print">
 .noprint { display: none; }
+.kcont, table.sudoku { font-size: 240%; }
+</style>
+<style type="text/css" media="screen">
+.kcont, table.sudoku { font-size: 5vmin; }
 </style>
 </head>
 
@@ -100,7 +105,7 @@ class Sudoku extends React.Component {
     render_button(name) {
         let cb = (ev) => { ev.preventDefault(); this.generate(name); };
         return (
-                <div className="two columns" key={name}><form onSubmit={cb}>
+                <div className="one-and-half column" key={name}><form onSubmit={cb}>
                 <input className={this.state.level == name ? "button button-primary" : "button"} type="submit" value={name}></input>
                 </form></div>
                 );
@@ -109,20 +114,16 @@ class Sudoku extends React.Component {
     render() {
         return (
             <div className="sudoku">
-            <div className="container">
             <div className="row noprint"><div className="twelve columns">
                 {Object.keys(kanji).map((key) => this.render_button(key))}
             </div></div>
-            <div className="row">
-            <div className="twelve columns">
+            <div>
             <div className="kcont">{this.state.kanji.map((k) => <span className="sudoku wide" key={k}>{k}</span>)}</div>
             </div>
-            </div>
-            <div className="row tabcontainer">
+            <div className="tabcontainer">
             <table className="sudoku" align="center"><tbody>
                 {this.state.board.map(this.render_row)}
             </tbody></table>
-            </div>
             </div>
             <pre className="debug">{"# period state\n" + JSON.stringify(this.state, null, "\t")}</pre>
             </div>
