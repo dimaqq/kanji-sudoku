@@ -16,16 +16,16 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 .user-row { box-shadow: 5px 5px 2px gray; border-radius: 4px; padding: 2px 2px 2px 2px; }
 .wide { margin-left: 1em; }
 
-table { margin:1em auto; }
-td { height:30px;
-     width:30px;
-     border:1px solid;
-     text-align:center; }
+table { font-size: 180%; -webkit-border-horizontal-spacing: 0; -webkit-border-vertical-spacing: 0; }
+td { height: 3em;
+     width: 3em;
+     border: 1px solid;
+     text-align: center; }
+td, th:first-child, td:first-child, th:last-child, td:last-child { padding: 1em 1em 1em 1em; margin: 0 0 0 0; }
 td:first-child { border-left:solid; }
 td:nth-child(3n) { border-right:solid ; }
 tr:first-child { border-top:solid; }
 tr:nth-child(3n) td { border-bottom:solid ; }
-
 </style>
 </head>
 
@@ -48,6 +48,18 @@ function sample(text, n) {
     return [...Array(n)].map(() => text[rand()]);
 }
 
+function sudoku_board(level="easy") {
+    return ["3.5..1..2",
+            "9...34.5.",
+            "..189..67",
+            "5...2..34",
+            ".4..67.2.",
+            "...1..5..",
+            "...2.89..",
+            ".67....4.",
+            ".284.531."];
+}
+
 class Sudoku extends React.Component {
     constructor(props) {
         super(props);
@@ -58,14 +70,14 @@ class Sudoku extends React.Component {
         this.render_button = this.render_button.bind(this);
     }
 
-    componentDidMount() { this.generate(); }
+    componentDidMount() { this.generate(Object.keys(kanji)[0]); }
     componentWillUnmount() { this.setState({kanji: [], board: []}) }
 
     generate(level="grade1") {
         // real logic goes here
         console.log("generate", level)
         let k = sample(kanji[level], 9);
-        this.setState({kanji: k, board: [level, "678"], level: level})
+        this.setState({kanji: k, board: sudoku_board(), level: level})
     }
 
     render_cell(c, i) {
@@ -77,10 +89,9 @@ class Sudoku extends React.Component {
     }
 
     render_button(name) {
-        console.log(name);
         let cb = (ev) => { ev.preventDefault(); this.generate(name); };
         return (
-                <div className="two columns"><form onSubmit={cb} key={name}>
+                <div className="two columns" key={name}><form onSubmit={cb}>
                 <input className={this.state.level == name ? "button button-primary" : "button"} type="submit" value={name}></input>
                 </form></div>
                 );
@@ -90,12 +101,18 @@ class Sudoku extends React.Component {
         return (
             <div className="sudoku">
             <div className="container">
+            <div className="row">
                 {Object.keys(kanji).map((key) => this.render_button(key))}
             </div>
+            <div className="row">
+            <div className="twelve columns">
             <h4>{this.state.kanji.map((k) => <span className="wide" key={k}>{k}</span>)}</h4>
+            </div>
+            </div>
             <table><tbody>
             {this.state.board.map(this.render_row)}
             </tbody></table>
+            </div>
             <pre className="debug">{"# period state\n" + JSON.stringify(this.state, null, "\t")}</pre>
             </div>
         );
