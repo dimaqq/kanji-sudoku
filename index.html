@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html><head>
+<script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+<script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+<script src="https://npmcdn.com/react-router@2.5.2/umd/ReactRouter.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.23.0/polyfill.js"></script>
+<script src="./kanji.js" charset="UTF-8"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
+<style type="text/css">
+a { text-decoration: none; padding-left: 1em; padding-right: 1em; border-radius: 2px; }
+.active { background-color: #1EAEDB; color: white }
+.registration { max-width: 400px; }
+input:disabled { background:#ccc ! important; border-color: #ccc ! important; text-shadow:none; }
+.debug { line-height: 1.2em; color: #1EAEDB ! important; display: none; }
+.user-row { box-shadow: 5px 5px 2px gray; border-radius: 4px; padding: 2px 2px 2px 2px; }
+
+table { margin:1em auto; }
+td { height:30px;
+     width:30px;
+     border:1px solid;
+     text-align:center; }
+td:first-child { border-left:solid; }
+td:nth-child(3n) { border-right:solid ; }
+tr:first-child { border-top:solid; }
+tr:nth-child(3n) td { border-bottom:solid ; }
+
+</style>
+</head>
+
+<body>
+
+<div id="container">
+
+</div>
+
+<script type="text/babel">
+var destination = document.querySelector("#container");
+
+class Sudoku extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {kanji: "", board: []}
+        this.generate = this.generate.bind(this);
+        this.render_row = this.render_row.bind(this);
+        this.render_cell = this.render_cell.bind(this);
+        this.render_button = this.render_button.bind(this);
+    }
+
+    componentDidMount() { this.generate(); }
+    componentWillUnmount() { this.setState({kanji: "", board: []}) }
+
+    generate(ev, name) {
+        if (ev) ev.preventDefault();
+        // real logic goes here
+        console.log("generate", name)
+        this.setState({kanji: "ABC", board: ["012", "678"]})
+    }
+
+    render_cell(c, i) {
+        return <td key={i}>{c}</td>
+    }
+
+    render_row(r, i) {
+        return <tr key={i}>{r.split("").map(this.render_cell)}</tr>
+    }
+
+    render_button(name) {
+        console.log(name);
+        let cb = (ev) => { ev.preventDefault(); console.log(name); };
+        return (
+                <div className="two columns"><form onSubmit={cb} key={name}>
+                <input className="button button-primary" type="submit" value={name}></input>
+                </form></div>
+                );
+    }
+
+    render() {
+        return (
+            <div className="sudoku">
+            <div className="container">
+                {Object.keys(kanji).map((key) => this.render_button(key))}
+            </div>
+            <h4>{this.state.kanji}</h4>
+            <table><tbody>
+            {this.state.board.map(this.render_row)}
+            </tbody></table>
+            <pre className="debug">{"# period state\n" + JSON.stringify(this.state, null, "\t")}</pre>
+            </div>
+        );
+    }
+}
+
+var sudoku = new Sudoku();
+
+ReactDOM.render(
+    <Sudoku />,
+    destination
+);
+</script>
+</body>
+
+</html>
