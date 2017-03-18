@@ -37,10 +37,20 @@ tr:nth-child(3n) td { border-bottom:solid ; }
 <script type="text/babel">
 var destination = document.querySelector("#container");
 
+function sample(text, n) {
+    let bucket = [...Array(text.length)].map((k, i) => i)
+    
+    function rand() {
+       var idx = Math.floor(Math.random() * bucket.length);
+       return bucket.splice(idx, 1)[0];
+    }
+    return [...Array(n)].map(() => text[rand()]);
+}
+
 class Sudoku extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {kanji: "", board: []}
+        this.state = {kanji: "", board: [], level: ""}
         this.generate = this.generate.bind(this);
         this.render_row = this.render_row.bind(this);
         this.render_cell = this.render_cell.bind(this);
@@ -50,11 +60,11 @@ class Sudoku extends React.Component {
     componentDidMount() { this.generate(); }
     componentWillUnmount() { this.setState({kanji: "", board: []}) }
 
-    generate(ev, name) {
-        if (ev) ev.preventDefault();
+    generate(level="grade1") {
         // real logic goes here
-        console.log("generate", name)
-        this.setState({kanji: "ABC", board: ["012", "678"]})
+        console.log("generate", level)
+        let k = sample(kanji[level], 9);
+        this.setState({kanji: k, board: [level, "678"], level: level})
     }
 
     render_cell(c, i) {
@@ -67,10 +77,10 @@ class Sudoku extends React.Component {
 
     render_button(name) {
         console.log(name);
-        let cb = (ev) => { ev.preventDefault(); console.log(name); };
+        let cb = (ev) => { ev.preventDefault(); this.generate(name); };
         return (
                 <div className="two columns"><form onSubmit={cb} key={name}>
-                <input className="button button-primary" type="submit" value={name}></input>
+                <input className={this.state.level == name ? "button button-primary" : "button"} type="submit" value={name}></input>
                 </form></div>
                 );
     }
