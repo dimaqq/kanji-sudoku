@@ -98,6 +98,7 @@ class Sudoku extends React.Component {
         this.render_row = this.render_row.bind(this);
         this.render_cell = this.render_cell.bind(this);
         this.grade_button = this.grade_button.bind(this);
+        this.diff_button = this.diff_button.bind(this);
     }
 
     componentDidMount() { this.generate(Object.keys(kanji)[0], "easy"); }
@@ -125,7 +126,7 @@ class Sudoku extends React.Component {
 
     diff_button(name) {
         let cb = (ev) => { ev.preventDefault(); this.generate(this.state.grade, name); };
-        return <div className={"select-button" + (this.state.grade == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
+        return <div className={"select-button" + (this.state.diff == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
     }
 
     render() {
@@ -133,10 +134,10 @@ class Sudoku extends React.Component {
             <div className="sudoku">
             <div className="noprint">
                 <div className="select-container">
-                    <div className="select-title">Kanji grade:</div>{Object.keys(kanji).map((key) => this.grade_button(key))}
+                    <div className="select-title">Kanji grade:</div>{Object.keys(kanji).map(this.grade_button)}
                 </div>
                 <div className="select-container">
-                    <div className="select-title">Sudoku difficulty:</div>{difficulties.map((key) => this.grade_button(key))}
+                    <div className="select-title">Sudoku difficulty:</div>{difficulties.map(this.diff_button)}
                 </div>
             </div>
             <div>
