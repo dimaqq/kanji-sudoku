@@ -18,16 +18,18 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 //.button { padding: 1em ! important; }
 .one-and-half { width: 8.95%; }
 .small { height: 2em ! important; vertical-align: middle; }
-.select-container { margin-left: auto; margin-right: auto; display: table; }
+.select-container { margin: 1em auto; display: table; width: 75vmin; display: flex; }
+.select-title { display: inline-block; margin-right: auto; }
 .select-button { display: inline-block;
                  border: 1px solid black;
-                 margin: 0.1em;
-                 padding: 0em 0.2em;
-                 text-transform: uppercase;
-                 border-radius: 0.2em; }
+                 margin-left: -1px; margin-right: 0px;
+                 border-radius: 0;
+                 padding: 0em 1em; }
 .select-button:hover { background-color: #eee; }
-
 .selected { background-color: #fcc; }
+
+.select-button:nth-child(2) { border-radius: 0.3em 0 0 0.3em; }
+.select-button:last-child { border-radius: 0 0.3em 0.3em 0; }
 
 .kcont, table.sudoku {
     display: table;
@@ -74,7 +76,9 @@ function sample(text, n) {
     return [...Array(n)].map(() => text[rand()]);
 }
 
-function sudoku_board(level="easy") {
+const difficulties = ["easy", "medium", "hard"];
+
+function sudoku_board(diff="easy") {
     return ["3.5..1..2",
             "9...34.5.",
             "..189..67",
@@ -89,22 +93,21 @@ function sudoku_board(level="easy") {
 class Sudoku extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {kanji: [], board: [], level: ""}
+        this.state = {kanji: [], board: [], grade: "", diff: "easy"}
         this.generate = this.generate.bind(this);
         this.render_row = this.render_row.bind(this);
         this.render_cell = this.render_cell.bind(this);
-        this.render_button = this.render_button.bind(this);
-        this.render_button_new = this.render_button_new.bind(this);
+        this.grade_button = this.grade_button.bind(this);
     }
 
-    componentDidMount() { this.generate(Object.keys(kanji)[0]); }
+    componentDidMount() { this.generate(Object.keys(kanji)[0], "easy"); }
     componentWillUnmount() { this.setState({kanji: [], board: []}) }
 
-    generate(level="grade1") {
+    generate(grade, diff) {
         // real logic goes here
-        console.log("generate", level)
-        let k = sample(kanji[level], 9);
-        this.setState({kanji: k, board: sudoku_board(), level: level})
+        console.log("generate", grade)
+        let k = sample(kanji[grade], 9);
+        this.setState({kanji: k, board: sudoku_board(), grade: grade, diff: diff})
     }
 
     render_cell(c, i) {
@@ -115,30 +118,25 @@ class Sudoku extends React.Component {
         return <tr key={i}>{r.split("").map(this.render_cell)}</tr>
     }
 
-    render_button(name) {
-        let cb = (ev) => { ev.preventDefault(); this.generate(name); };
-        return (
-                <div className="one-and-half column" key={name}><form onSubmit={cb}>
-                <input className={"button small " + (this.state.level == name ? "button-primary" : "")} type="submit" value={name}></input>
-                </form>
-                </div>
-                );
+    grade_button(name) {
+        let cb = (ev) => { ev.preventDefault(); this.generate(name, this.state.diff); };
+        return <div className={"select-button" + (this.state.grade == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
     }
 
-    render_button_new(name) {
-        let cb = (ev) => { ev.preventDefault(); this.generate(name); };
-        return <div className={"select-button" + (this.state.level == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
+    diff_button(name) {
+        let cb = (ev) => { ev.preventDefault(); this.generate(this.state.grade, name); };
+        return <div className={"select-button" + (this.state.grade == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
     }
 
     render() {
         return (
             <div className="sudoku">
             <div className="noprint">
-                <div className="row noprint"><div className="twelve columns">
-                    {Object.keys(kanji).map((key) => this.render_button(key))}
-                </div></div>
                 <div className="select-container">
-                    {Object.keys(kanji).map((key) => this.render_button_new(key))}
+                    <div className="select-title">Kanji grade:</div>{Object.keys(kanji).map((key) => this.grade_button(key))}
+                </div>
+                <div className="select-container">
+                    <div className="select-title">Sudoku difficulty:</div>{difficulties.map((key) => this.grade_button(key))}
                 </div>
             </div>
             <div>
