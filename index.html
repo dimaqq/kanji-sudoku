@@ -17,6 +17,17 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 // .row { width: 100%; }
 //.button { padding: 1em ! important; }
 .one-and-half { width: 8.95%; }
+.small { height: 2em ! important; vertical-align: middle; }
+.select-container { margin-left: auto; margin-right: auto; display: table; }
+.select-button { display: inline-block;
+                 border: 1px solid black;
+                 margin: 0.1em;
+                 padding: 0em 0.2em;
+                 text-transform: uppercase;
+                 border-radius: 0.2em; }
+.select-button:hover { background-color: #eee; }
+
+.selected { background-color: #fcc; }
 
 .kcont, table.sudoku {
     display: table;
@@ -40,6 +51,7 @@ tr:last-child { border-bottom: 3px solid; }
 </style>
 <style type="text/css" media="screen">
 .kcont, table.sudoku { font-size: 4.5vmin; }
+.select-container { font-size: 2vmin; }
 </style>
 </head>
 
@@ -82,6 +94,7 @@ class Sudoku extends React.Component {
         this.render_row = this.render_row.bind(this);
         this.render_cell = this.render_cell.bind(this);
         this.render_button = this.render_button.bind(this);
+        this.render_button_new = this.render_button_new.bind(this);
     }
 
     componentDidMount() { this.generate(Object.keys(kanji)[0]); }
@@ -106,22 +119,33 @@ class Sudoku extends React.Component {
         let cb = (ev) => { ev.preventDefault(); this.generate(name); };
         return (
                 <div className="one-and-half column" key={name}><form onSubmit={cb}>
-                <input className={this.state.level == name ? "button button-primary" : "button"} type="submit" value={name}></input>
-                </form></div>
+                <input className={"button small " + (this.state.level == name ? "button-primary" : "")} type="submit" value={name}></input>
+                </form>
+                </div>
                 );
+    }
+
+    render_button_new(name) {
+        let cb = (ev) => { ev.preventDefault(); this.generate(name); };
+        return <div className={"select-button" + (this.state.level == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
     }
 
     render() {
         return (
             <div className="sudoku">
-            <div className="row noprint"><div className="twelve columns">
-                {Object.keys(kanji).map((key) => this.render_button(key))}
-            </div></div>
+            <div className="noprint">
+                <div className="row noprint"><div className="twelve columns">
+                    {Object.keys(kanji).map((key) => this.render_button(key))}
+                </div></div>
+                <div className="select-container">
+                    {Object.keys(kanji).map((key) => this.render_button_new(key))}
+                </div>
+            </div>
             <div>
             <div className="kcont">{this.state.kanji.map((k) => <span className="sudoku wide" key={k}>{k}</span>)}</div>
             </div>
             <div className="tabcontainer">
-            <table className="sudoku" align="center"><tbody>
+            <table className="sudoku"><tbody>
                 {this.state.board.map(this.render_row)}
             </tbody></table>
             </div>
