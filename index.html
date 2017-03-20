@@ -9,6 +9,19 @@
 <script src="./kanji.js" charset="UTF-8"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
 <style type="text/css">
+@font-face {
+    font-family: 'Kanji Stroke Order';
+    src: url('//fasiha.github.io/randh/webfont/webfont/KanjiStrokeOrders_v3.001.eot');
+    src: url('//fasiha.github.io/randh/webfont/webfont/KanjiStrokeOrders_v3.001.eot?#iefix') format('embedded-opentype'),
+         url('//fasiha.github.io/randh/webfont/webfont/KanjiStrokeOrders_v3.001.woff') format('woff'),
+         url('//fasiha.github.io/randh/webfont/KanjiStrokeOrders_v3.001.ttf') format('truetype'),
+         local('KanjiStrokeOrders');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.stroke { font-family: Kanji Stroke Order; }
+
 a { text-decoration: none; padding-left: 1em; padding-right: 1em; border-radius: 2px; }
 .active { background-color: #1EAEDB; color: white }
 .registration { max-width: 400px; }
@@ -35,10 +48,11 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 .description { width: 75vmin; height-max: 50vmin; display: table; margin: 1em auto; line-height: 0; }
 .card { display: inline-block;
         width: 25vmin; box-sizing: border-box;
-        border: 1px solid black; margin: -2px -1px 0 0;
+        border: 1px solid black; margin: -1px -1px 0 0;
         line-height: initial;
         overflow: hidden; }
 .card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; padding: 0.5em; }
+div.stroke { font-size: 15vmin; float: right; }
 .card div { display: inline-block; width: auto; }
 
 .kcont, table.sudoku {
@@ -82,6 +96,8 @@ tr:last-child { border-bottom: 3px solid; }
 
 <script type="text/babel">
 var destination = document.querySelector("#container");
+
+document.fonts.ready.then((x) => { console.log(x); });
 
 function sample(text, n) {
     let bucket = [...Array(text.length)].map((k, i) => i)
@@ -137,7 +153,9 @@ class Sudoku extends React.Component {
                 か.う<br/>
                 バイ
                 </div>
-                <img src="//kanjicards.org/img/stroke_order/2229.png"/>
+                { 0 ?  <img src="//kanjicards.org/img/stroke_order/2229.png"/>
+                : <div className="stroke">{k}</div>
+                }
             </div>
             );
     }
@@ -170,6 +188,12 @@ class Sudoku extends React.Component {
                 <div className="select-container">
                     <div className="select-title">Sudoku difficulty:</div>{difficulties.map(this.diff_button)}
                 </div>
+                <details className="select-container">
+                    <summary>Help</summary>
+                    <p>test test test</p>
+                    <p>test test test</p>
+                    <p>Stroke order fonts by https://github.com/fasiha/randh</p>
+                </details>
             </div>
             <div className="description">
                 {this.state.kanji.map(this.card)}
