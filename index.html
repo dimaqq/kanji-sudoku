@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html><head>
+<meta name="google" value="notranslate">
 <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
 <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
@@ -31,16 +32,18 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 .select-button:nth-child(2) { border-radius: 0.3em 0 0 0.3em; }
 .select-button:last-child { border-radius: 0 0.3em 0.3em 0; }
 
-.description { width: 75vmin; height: 50vmin; display: table; margin: 0.5em auto; }
+.description { width: 75vmin; height-max: 50vmin; display: table; margin: 1em auto; line-height: 0; }
 .card { display: inline-block;
         width: 25vmin; box-sizing: border-box;
-        border: 1px solid black; margin: -1px -1px 0 0;
+        border: 1px solid black; margin: -2px -1px 0 0;
+        line-height: initial;
         overflow: hidden; }
-.card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; margin: 0.5em; }
+.card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; padding: 0.5em; }
 .card div { display: inline-block; width: auto; }
 
 .kcont, table.sudoku {
     display: table;
+    width: 75vmin; height: 75vmin; box-sizing: border-box;
     border-collapse: collapse;
     -webkit-border-horizontal-spacing: 0;
     -webkit-border-vertical-spacing: 0; 
@@ -54,11 +57,15 @@ tr:first-child { border-top:3px solid; }
 tr:nth-child(3n) td { border-bottom:solid ; }
 tr:last-child { border-bottom: 3px solid; }
 
+.kcont, table.sudoku { font-size: 4.5vmin; }
+.select-container { font-size: 2vmin; }
+.description { font-size: 3vmin; }
+
 </style>
 <style type="text/css" media="print">
 .noprint { display: none; }
-.kcont, table.sudoku { font-size: 240%; }
-.description { font-size: 200%; }
+// .kcont, table.sudoku { font-size: 240%; }
+// .description { font-size: 200%; }
 </style>
 <style type="text/css" media="screen">
 .kcont, table.sudoku { font-size: 4.5vmin; }
@@ -130,7 +137,7 @@ class Sudoku extends React.Component {
                 か.う<br/>
                 バイ
                 </div>
-                <img src="http://kanjicards.org/img/stroke_order/2229.png"/>
+                <img src="//kanjicards.org/img/stroke_order/2229.png"/>
             </div>
             );
     }
@@ -164,7 +171,6 @@ class Sudoku extends React.Component {
                     <div className="select-title">Sudoku difficulty:</div>{difficulties.map(this.diff_button)}
                 </div>
             </div>
-            <div className="kcont">{this.state.kanji.map((k) => <span className="sudoku wide" key={k}>{k}</span>)}</div>
             <div className="description">
                 {this.state.kanji.map(this.card)}
             </div>
