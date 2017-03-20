@@ -31,6 +31,14 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 .select-button:nth-child(2) { border-radius: 0.3em 0 0 0.3em; }
 .select-button:last-child { border-radius: 0 0.3em 0.3em 0; }
 
+.description { width: 75vmin; height: 50vmin; display: table; margin: 0.5em auto; }
+.card { display: inline-block;
+        width: 25vmin; box-sizing: border-box;
+        border: 1px solid black; margin: -1px -1px 0 0;
+        overflow: hidden; }
+.card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; margin: 0.5em; }
+.card div { display: inline-block; width: auto; }
+
 .kcont, table.sudoku {
     display: table;
     border-collapse: collapse;
@@ -50,10 +58,12 @@ tr:last-child { border-bottom: 3px solid; }
 <style type="text/css" media="print">
 .noprint { display: none; }
 .kcont, table.sudoku { font-size: 240%; }
+.description { font-size: 200%; }
 </style>
 <style type="text/css" media="screen">
 .kcont, table.sudoku { font-size: 4.5vmin; }
 .select-container { font-size: 2vmin; }
+.description { font-size: 3vmin; }
 </style>
 </head>
 
@@ -99,6 +109,7 @@ class Sudoku extends React.Component {
         this.render_cell = this.render_cell.bind(this);
         this.grade_button = this.grade_button.bind(this);
         this.diff_button = this.diff_button.bind(this);
+        this.card = this.card.bind(this);
     }
 
     componentDidMount() { this.generate(Object.keys(kanji)[0], "easy"); }
@@ -109,6 +120,19 @@ class Sudoku extends React.Component {
         console.log("generate", grade)
         let k = sample(kanji[grade], 9);
         this.setState({kanji: k, board: sudoku_board(), grade: grade, diff: diff})
+    }
+
+    card(k) {
+        return (
+            <div className="card" key={k}>
+                <div>
+                {k}<br/>
+                か.う<br/>
+                バイ
+                </div>
+                <img src="http://kanjicards.org/img/stroke_order/2229.png"/>
+            </div>
+            );
     }
 
     render_cell(c, i) {
@@ -140,8 +164,9 @@ class Sudoku extends React.Component {
                     <div className="select-title">Sudoku difficulty:</div>{difficulties.map(this.diff_button)}
                 </div>
             </div>
-            <div>
             <div className="kcont">{this.state.kanji.map((k) => <span className="sudoku wide" key={k}>{k}</span>)}</div>
+            <div className="description">
+                {this.state.kanji.map(this.card)}
             </div>
             <div className="tabcontainer">
             <table className="sudoku"><tbody>
