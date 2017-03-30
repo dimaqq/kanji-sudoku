@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html><head>
+<meta charset="UTF-8">
 <meta name="google" value="notranslate">
 <script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
 <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
@@ -29,7 +30,8 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
                  border: 1px solid black;
                  margin-left: -1px; margin-right: 0px;
                  border-radius: 0;
-                 padding: 0em 1em; }
+                 padding: 0em 1em;
+                 cursor: pointer; }
 .select-button:hover { background-color: #eee; }
 .selected { background-color: #fcc; }
 
@@ -43,7 +45,8 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
         line-height: initial;
         overflow: hidden; }
 .card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; padding: 0.5em; }
-img.help { box-sixing: border-box; width: 100%; border: 1px solid silver; }
+img.help { box-sixing: border-box; width: 100%; border: 1px solid silver; cursor: pointer; }
+img.hidden { display: none; }
 div.stroke { font-size: 15vmin; float: right; }
 .card div { display: inline-block; width: auto; }
 
@@ -115,6 +118,29 @@ function sudoku_board(diff="easy") {
             ".284.531."];
 }
 
+class HowTo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {n:0};
+        this.next = this.next.bind(this);
+    }
+
+    render() {
+        return (
+            <details className="select-container">
+                <summary>How to use?</summary>
+                <img className={this.state.n == 0 ? "help" : "hidden"} src="./img/howto1.png" onClick={this.next}/>
+                <img className={this.state.n == 1 ? "help" : "hidden"} src="./img/howto2.png" onClick={this.next}/>
+                <img className={this.state.n == 2 ? "help" : "hidden"} src="./img/howto3.png" onClick={this.next}/>
+            </details>
+        );
+    }
+
+    next() {
+        this.setState({n: (this.state.n + 1) % 3});
+    }
+}
+
 class Sudoku extends React.Component {
     constructor(props) {
         super(props);
@@ -180,12 +206,7 @@ class Sudoku extends React.Component {
                 <div className="select-container">
                     <div className="select-title">Sudoku difficulty:</div>{difficulties.map(this.diff_button)}
                 </div>
-                <details className="select-container">
-                    <summary>How to use?</summary>
-                    <img className="help" src="./img/howto1.png" />
-                    <img className="help" src="./img/howto2.png" />
-                    <img className="help" src="./img/howto3.png" />
-                </details>
+            <HowTo></HowTo>
             </div>
             <div className="description">
                 {this.state.kanji.map(this.card)}
