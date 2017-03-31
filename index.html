@@ -106,16 +106,16 @@ function sample(text, n) {
 
 const difficulties = ["easy", "medium", "hard"];
 
-function sudoku_board(diff="easy") {
-    return ["3.5..1..2",
-            "9...34.5.",
-            "..189..67",
-            "5...2..34",
-            ".4..67.2.",
-            "...1..5..",
-            "...2.89..",
-            ".67....4.",
-            ".284.531."];
+async function load_sudoku() {
+    let r = await fetch("./dat/easy.js");
+    return r.json();
+}
+
+const sudokus = load_sudoku();
+
+async function sudoku_board(diff="easy") {
+     let ss = await sudokus;
+     return ss[Math.floor(Math.random() * ss.length)];
 }
 
 class HowTo extends React.Component {
@@ -156,11 +156,11 @@ class Sudoku extends React.Component {
     componentDidMount() { this.generate(Object.keys(kanji)[0], "easy"); }
     componentWillUnmount() { this.setState({kanji: [], board: []}) }
 
-    generate(grade, diff) {
+    async generate(grade, diff) {
         // real logic goes here
         console.log("generate", grade)
         let k = sample(kanji[grade], 9);
-        this.setState({kanji: k, board: sudoku_board(), grade: grade, diff: diff})
+        this.setState({kanji: k, board: await sudoku_board(), grade: grade, diff: diff})
     }
 
     card(k) {
