@@ -18,13 +18,13 @@ def split_webfont(font_file_name):
     font-family: 'Kanji Stroke Order';
     font-weight: normal;
     font-style: normal;
-    src: url('./fnt/stroke{i}.woff') format('woff');
+    src: url('./stroke{i}.woff') format('woff');
     unicode-range: {urange};
     }}
         """)
         done = done.union(data)
 
-    with open(f"{top}/font.css", "w") as fout:
+    with open(f"{top}/fnt/font.css", "w") as fout:
         fout.write("".join(css))
 
 if __name__ == "__main__":
