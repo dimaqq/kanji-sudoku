@@ -1,3 +1,4 @@
+import sys
 import json
 from bs4 import BeautifulSoup
 
@@ -16,6 +17,9 @@ def kanji(bs):
 
 
 if __name__ == "__main__":
-    bs = BeautifulSoup(open("./KanjiCards.org-class-2.htm"), "html.parser")
+    data = dict()
+    for filename in sys.argv[1:]:
+        bs = BeautifulSoup(open(filename), "html.parser")
+        data.update(kanji(bs))
     with open("dat/reading.js", "w") as fout:
-        json.dump(dict(kanji(bs)), fout, ensure_ascii=False)
+        json.dump(data, fout, ensure_ascii=False)
