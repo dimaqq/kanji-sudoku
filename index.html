@@ -47,8 +47,8 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 .card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; padding: 0.5em; }
 img.help { box-sixing: border-box; width: 100%; border: 1px solid silver; cursor: pointer; }
 img.hidden { display: none; }
-div.stroke { font-size: 15vmin; float: right; }
-.card div { display: inline-block; width: auto; }
+.stroke { display: inline-block; font-size: 10vmin; float: left; }
+.reading { display: inline-block; width: 10vmin; white-space: nowrap; overflow: hidden; text-overflow: fade; }
 
 .kcont, table.sudoku {
     display: table;
@@ -113,6 +113,13 @@ async function load_sudoku() {
 
 const sudokus = load_sudoku();
 
+async function load_readings() {
+    let r = await fetch("./dat/reading.js");
+    return r.json();
+}
+
+const readings = load_readings();
+
 async function sudoku_board(diff="easy") {
      let ss = await sudokus;
      return ss[Math.floor(Math.random() * ss.length)];
@@ -160,16 +167,22 @@ class Sudoku extends React.Component {
         // real logic goes here
         console.log("generate", grade)
         let k = sample(kanji[grade], 9);
-        this.setState({kanji: k, board: await sudoku_board(), grade: grade, diff: diff})
+        let read = {};
+        for (const kk of k) {
+            // hack until all readings are collected
+            const r = (await readings)[kk];
+            read[kk] = r? r: {kun: "", on: ""};
+        }
+        this.setState({kanji: k, readings: read, board: await sudoku_board(), grade: grade, diff: diff})
     }
 
     card(k) {
         return (
             <div className="card" key={k}>
-                <div>
+                <div className="reading">
                 {k}<br/>
-                か.う<br/>
-                バイ
+                {this.state.readings[k]["kun"]}<br/>
+                {this.state.readings[k]["on"]}
                 </div>
                 { 0 ?  <img src="//kanjicards.org/img/stroke_order/2229.png"/>
                 : <div className="stroke">{k}</div>
