@@ -44,11 +44,11 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
         border: 1px solid black; margin: -1px -1px 0 0;
         line-height: initial;
         overflow: hidden; }
-.card img { width: 10vmin; height: 10vmin; object-fit: contain; float: right; padding: 0.5em; }
 img.help { box-sixing: border-box; width: 100%; border: 1px solid silver; cursor: pointer; }
 img.hidden { display: none; }
-.stroke { display: inline-block; font-size: 10vmin; float: left; }
-.reading { display: inline-block; width: 10vmin; white-space: nowrap; overflow: hidden; text-overflow: fade; }
+.cardcont { display: flex; width: 100%; }
+.stroke { display: inline-block; font-size: 8vmin; }
+.reading { display: inline-block; margin-top: 0.5em; width: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .kcont, table.sudoku {
     display: table;
@@ -68,18 +68,14 @@ tr:last-child { border-bottom: 3px solid; }
 
 .kcont, table.sudoku { font-size: 4.5vmin; }
 .select-container { font-size: 2vmin; }
-.description { font-size: 3vmin; }
+.description { font-size: 2vmin; }
 
 </style>
 <style type="text/css" media="print">
 .noprint { display: none; }
-// .kcont, table.sudoku { font-size: 240%; }
-// .description { font-size: 200%; }
 </style>
 <style type="text/css" media="screen">
-.kcont, table.sudoku { font-size: 4.5vmin; }
-.select-container { font-size: 2vmin; }
-.description { font-size: 3vmin; }
+.printonly { display: none; }
 </style>
 </head>
 
@@ -179,14 +175,13 @@ class Sudoku extends React.Component {
     card(k) {
         return (
             <div className="card" key={k}>
-                <div className="reading">
-                {k}<br/>
-                {this.state.readings[k]["kun"]}<br/>
-                {this.state.readings[k]["on"]}
+                <div className="cardcont">
+                    <div className="stroke">{k}</div>
+                    <div className="reading">
+                    {this.state.readings[k]["kun"]}<br/>
+                    {this.state.readings[k]["on"]}
+                    </div>
                 </div>
-                { 0 ?  <img src="//kanjicards.org/img/stroke_order/2229.png"/>
-                : <div className="stroke">{k}</div>
-                }
             </div>
             );
     }
@@ -220,6 +215,9 @@ class Sudoku extends React.Component {
                     <div className="select-title">Sudoku difficulty:</div>{difficulties.map(this.diff_button)}
                 </div>
             <HowTo></HowTo>
+            </div>
+            <div className="printonly select-container">
+                <div className="select-title">dimaqq.github.io/kanji-sudoku</div>kanji grade: {this.state.grade}, sudoku: {this.state.diff}
             </div>
             <div className="description">
                 {this.state.kanji.map(this.card)}
