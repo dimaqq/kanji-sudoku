@@ -5,3 +5,4 @@ en:
   last_successful_login: "Last successful login"
   change_password_for_x: "Change Password For ${ match.params.id }"
   alternatively_long: "Alternatively, the user could have been deleted by another admin while you were working on this user."
+  dummy: "Dummy string"
