@@ -2,12 +2,9 @@
 <html><head>
 <meta charset="UTF-8">
 <meta name="google" value="notranslate">
-<script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
-<script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
-<script src="https://npmcdn.com/react-router@2.5.2/umd/ReactRouter.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.23.0/polyfill.js"></script>
-<script src="./dat/kanji.js" charset="UTF-8"></script>
+<script crossorigin src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+<script crossorigin src="https://npmcdn.com/react-router@2.5.2/umd/ReactRouter.js"></script>
 <link rel="shortcut icon" type="image/png" href="./img/icon.png">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
 <link rel="stylesheet" type="text/css" href="./fnt/font.css" />
@@ -85,7 +82,16 @@ tr:last-child { border-bottom: 3px solid; }
 
 </div>
 
-<script type="text/babel">
+<script type="module">
+// TODO test if browser really loads and parses imports in parallel, it should...
+import {h, render, Component} from "./lib/preact.js";
+
+const init = async () => {
+
+//const styled = await import("https://cdnjs.cloudflare.com/ajax/libs/styled-components/5.1.1/styled-components-macro.esm.js");
+
+const {html, Component} = await import("./lib/htm/preact.js");
+const kanji = await import("./dat/kanji.js");
 var destination = document.querySelector("#container");
 
 document.fonts.ready.then((x) => { console.log(x); });
@@ -129,14 +135,14 @@ class HowTo extends React.Component {
     }
 
     render() {
-        return (
+        return html`
             <details className="select-container">
                 <summary>How to use?</summary>
                 <img className={this.state.n == 0 ? "help" : "hidden"} src="./img/howto1.png" onClick={this.next}/>
                 <img className={this.state.n == 1 ? "help" : "hidden"} src="./img/howto2.png" onClick={this.next}/>
                 <img className={this.state.n == 2 ? "help" : "hidden"} src="./img/howto3.png" onClick={this.next}/>
             </details>
-        );
+        `;
     }
 
     next() {
@@ -173,39 +179,43 @@ class Sudoku extends React.Component {
     }
 
     card(k) {
-        return (
-            <div className="card" key={k}>
-                <div className="cardcont">
-                    <div className="stroke">{k}</div>
-                    <div className="reading">
-                    {this.state.readings[k]["kun"]}<br/>
-                    {this.state.readings[k]["on"]}
-                    </div>
-                </div>
-            </div>
-            );
+        return html`
+          <div className="card" key={k}>
+              <div className="cardcont">
+                  <div className="stroke">{k}</div>
+                  <div className="reading">
+                  {this.state.readings[k]["kun"]}<br/>
+                  {this.state.readings[k]["on"]}
+                  </div>
+              </div>
+          </div>
+        `;
     }
 
     render_cell(c, i) {
-        return <td key={i}>{this.state.kanji[c - 1]}</td>
+        return html`<td key={i}>{this.state.kanji[c - 1]}</td>`;
     }
 
     render_row(r, i) {
-        return <tr key={i}>{r.split("").map(this.render_cell)}</tr>
+        return html`<tr key={i}>{r.split("").map(this.render_cell)}</tr>`;
     }
 
     grade_button(name) {
         let cb = (ev) => { ev.preventDefault(); this.generate(name, this.state.diff); };
-        return <div className={"select-button" + (this.state.grade == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
+        return html`
+          <div className={"select-button" + (this.state.grade == name?" selected":"")} onClick={cb} key={name}>{name}</div>
+        `;
     }
 
     diff_button(name) {
         let cb = (ev) => { ev.preventDefault(); this.generate(this.state.grade, name); };
-        return <div className={"select-button" + (this.state.diff == name?" selected":"")} onClick={cb} key={name}>{name}</div>;
+        return html`
+          <div className={"select-button" + (this.state.diff == name?" selected":"")} onClick={cb} key={name}>{name}</div>
+        `;
     }
 
     render() {
-        return (
+        return html`
             <div className="sudoku">
             <div className="noprint">
                 <div className="select-container">
@@ -229,17 +239,15 @@ class Sudoku extends React.Component {
             </div>
             <pre className="debug">{"# period state\n" + JSON.stringify(this.state, null, "\t")}</pre>
             </div>
-        );
+        `;
     }
 }
 
 var sudoku = new Sudoku();
 
-ReactDOM.render(
-    <Sudoku />,
-    destination
-);
-</script>
+ReactDOM.render(html`<Sudoku />`, destination);
+
+};init();</script>
 </body>
 
 </html>
