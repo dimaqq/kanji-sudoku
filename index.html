@@ -2,6 +2,7 @@
 <html><head>
 <meta charset="UTF-8">
 <meta name="google" value="notranslate">
+<title>Kanji Sudoku</title>
 <link rel="shortcut icon" type="image/png" href="./img/icon.png">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
 <link rel="stylesheet" type="text/css" href="./fnt/font.css" />
@@ -88,10 +89,10 @@ import sudokus from "./dat/easy.js";
 //document.fonts.ready.then((x) => { console.log(x); });
 
 const sample = (text, n) => {
-    let bucket = [...Array(text.length)].map((k, i) => i)
+    const bucket = [...Array(text.length)].map((k, i) => i)
     
     function rand() {
-       var idx = Math.floor(Math.random() * bucket.length);
+       const idx = Math.floor(Math.random() * bucket.length);
        // FIXME slice, surely?
        return bucket.splice(idx, 1)[0];
     }
@@ -143,8 +144,8 @@ class Sudoku extends Component {
     generate(grade, diff) {
         // real logic goes here
         console.log("generate", grade);
-        let k = sample(kanji[grade], 9);
-        let read = {};
+        const k = sample(kanji[grade], 9);
+        const read = {};
         for (const kk of k) {
             // hack until all readings are collected
             const r = readings[kk];
@@ -176,16 +177,18 @@ class Sudoku extends Component {
     }
 
     grade_button(name) {
-        let cb = (ev) => { ev.preventDefault(); this.generate(name, this.state.diff); };
+        const cb = (ev) => { ev.preventDefault(); this.generate(name, this.state.diff); };
         return html`
-          <div className=${"select-button" + (this.state.grade == name?" selected":"")} onClick=${cb} key=${name}>${name}</div>
+          <div className=${"select-button" + (this.state.grade == name?" selected":"")}
+	       onClick=${cb} key=${name}>${name}</div>
         `;
     }
 
     diff_button(name) {
-        let cb = (ev) => { ev.preventDefault(); this.generate(this.state.grade, name); };
+        const cb = (ev) => { ev.preventDefault(); this.generate(this.state.grade, name); };
         return html`
-          <div className=${"select-button" + (this.state.diff == name?" selected":"")} onClick=${cb} key=${name}>${name}</div>
+          <div className=${"select-button" + (this.state.diff == name?" selected":"")}
+	       onClick=${cb} key=${name}>${name}</div>
         `;
     }
 
@@ -194,10 +197,12 @@ class Sudoku extends Component {
             <div className="sudoku">
             <div className="noprint">
                 <div className="select-container">
-                    <div className="select-title">Kanji grade:</div>${Object.keys(kanji).map(this.grade_button)}
+                    <div className="select-title">Kanji grade:</div>
+		    ${Object.keys(kanji).map(this.grade_button)}
                 </div>
                 <div className="select-container">
-                    <div className="select-title">Sudoku difficulty:</div>${difficulties.map(this.diff_button)}
+                    <div className="select-title">Sudoku difficulty:</div>
+		    ${difficulties.map(this.diff_button)}
                 </div>
 	    <${HowTo}/>
             </div>
