@@ -2,9 +2,6 @@
 <html><head>
 <meta charset="UTF-8">
 <meta name="google" value="notranslate">
-<script crossorigin src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
-<script crossorigin src="https://npmcdn.com/react-router@2.5.2/umd/ReactRouter.js"></script>
 <link rel="shortcut icon" type="image/png" href="./img/icon.png">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
 <link rel="stylesheet" type="text/css" href="./fnt/font.css" />
@@ -83,51 +80,30 @@ tr:last-child { border-bottom: 3px solid; }
 </div>
 
 <script type="module">
-// TODO test if browser really loads and parses imports in parallel, it should...
-import {h, render, Component} from "./lib/preact.js";
+import {html, Component, render} from "https://unpkg.com/htm/preact/standalone.mjs";
+import kanji from "./dat/kanji.js";
+import readings from "./dat/reading.js";
+import sudokus from "./dat/easy.js";
 
-const init = async () => {
-
-//const styled = await import("https://cdnjs.cloudflare.com/ajax/libs/styled-components/5.1.1/styled-components-macro.esm.js");
-
-const {html, Component} = await import("./lib/htm/preact.js");
-const kanji = await import("./dat/kanji.js");
-var destination = document.querySelector("#container");
 
 document.fonts.ready.then((x) => { console.log(x); });
 
-function sample(text, n) {
+const sample = (text, n) => {
     let bucket = [...Array(text.length)].map((k, i) => i)
     
     function rand() {
        var idx = Math.floor(Math.random() * bucket.length);
+       // FIXME slice, surely?
        return bucket.splice(idx, 1)[0];
     }
+
     return [...Array(n)].map(() => text[rand()]);
 }
 
 const difficulties = ["easy", "medium", "hard"];
+const sudoku_board = (diff="easy") => sudokus[Math.floor(Math.random() * ss.length)];
 
-async function load_sudoku() {
-    let r = await fetch("./dat/easy.js");
-    return r.json();
-}
-
-const sudokus = load_sudoku();
-
-async function load_readings() {
-    let r = await fetch("./dat/reading.js");
-    return r.json();
-}
-
-const readings = load_readings();
-
-async function sudoku_board(diff="easy") {
-     let ss = await sudokus;
-     return ss[Math.floor(Math.random() * ss.length)];
-}
-
-class HowTo extends React.Component {
+class HowTo extends Component {
     constructor(props) {
         super(props);
         this.state = {n:0};
@@ -150,7 +126,7 @@ class HowTo extends React.Component {
     }
 }
 
-class Sudoku extends React.Component {
+class Sudoku extends Component {
     constructor(props) {
         super(props);
         this.state = {kanji: [], board: [], grade: "", diff: "easy"}
@@ -165,17 +141,17 @@ class Sudoku extends React.Component {
     componentDidMount() { this.generate(Object.keys(kanji)[0], "easy"); }
     componentWillUnmount() { this.setState({kanji: [], board: []}) }
 
-    async generate(grade, diff) {
+    generate(grade, diff) {
         // real logic goes here
         console.log("generate", grade);
         let k = sample(kanji[grade], 9);
         let read = {};
         for (const kk of k) {
             // hack until all readings are collected
-            const r = (await readings)[kk];
+            const r = readings[kk];
             read[kk] = r? r: {kun: "", on: ""};
         }
-        this.setState({kanji: k, readings: read, board: await sudoku_board(), grade: grade, diff: diff})
+        this.setState({kanji: k, readings: read, board: sudoku_board(), grade: grade, diff: diff})
     }
 
     card(k) {
@@ -244,10 +220,9 @@ class Sudoku extends React.Component {
 }
 
 var sudoku = new Sudoku();
-
-ReactDOM.render(html`<Sudoku />`, destination);
-
-};init();</script>
+const destination = document.querySelector("#container");
+render(html`<${Sudoku}/>`, destination);
+</script>
 </body>
 
 </html>
