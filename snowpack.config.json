@@ -1,6 +1,0 @@
-{
-  "install": ["preact", "htm", "htm/preact"],
-  "installOptions": {"dest": "lib"},
-  "scripts": {},
-  "plugins": []
-}
