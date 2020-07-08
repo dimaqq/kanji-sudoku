@@ -7,3 +7,11 @@
 
 * Change Kanji level at the top of the page
 * Submit improvement ideas and patches!
+
+### Source code
+
+See [index.html](index.html).
+
+### Dev setup
+
+None! 🎉
