@@ -119,7 +119,6 @@ class Sudoku extends Component {
         this.state = {kanji: [], board: [], grade: "", diff: "easy"}
         this.generate = this.generate.bind(this);
         this.render_row = this.render_row.bind(this);
-        this.render_cell = this.render_cell.bind(this);
         this.grade_button = this.grade_button.bind(this);
         this.diff_button = this.diff_button.bind(this);
         this.card = this.card.bind(this);
@@ -132,12 +131,7 @@ class Sudoku extends Component {
         // real logic goes here
         console.log("generate", grade);
         const k = sample(kanji[grade], 9);
-        const read = {};
-        for (const kk of k) {
-            // hack until all readings are collected
-            const r = readings[kk];
-            read[kk] = r? r: {kun: "", on: ""};
-        }
+	const read = Object.fromEntries(k.map(kk => [kk, readings[kk] || {kun: "", on: ""}]));
         this.setState({kanji: k, readings: read, board: sudoku_board(), grade: grade, diff: diff})
     }
 
@@ -155,12 +149,8 @@ class Sudoku extends Component {
         `;
     }
 
-    render_cell(c, i) {
-        return html`<td key=${ i }>${ this.state.kanji[c - 1] }</td>`;
-    }
-
-    render_row(r, i) {
-        return html`<tr key=${ i }>${ r.split("").map(this.render_cell) }</tr>`;
+    render_row(r) {
+	return html`<tr>${ r.split("").map(c => this.state.kanji[c-1]).map(Cell) }</tr>`;
     }
 
     grade_button(name) {
@@ -201,15 +191,21 @@ class Sudoku extends Component {
                 ${ this.state.kanji.map(this.card) }
             </div>
             <div className="tabcontainer">
-            <table className="sudoku"><tbody>
-                ${ this.state.board.map(this.render_row) }
-            </tbody></table>
+	    ${ Board(this.state.board, this.state.kanji) }
             </div>
             <pre className="debug">${ "# period state\n" + JSON.stringify(this.state, null, "\t") }</pre>
             </div>
         `;
     }
 }
+
+const Board = (board, kanji) => html`<table class="sudoku"><tbody>
+    ${ board.map(line => Row(line, kanji)) }
+  </tbody></table>`;
+
+// FIXME replace Row/Cell with flexbox or grid
+const Row = (line, kanji) => html`<tr>${ line.split("").map(c => Cell(kanji[c-1])) }</tr>`;
+const Cell = (glyph) => html`<td>${ glyph }</td>`;
 
 render(html`<${ Sudoku }/>`, document.querySelector("#container"));
 </script>
