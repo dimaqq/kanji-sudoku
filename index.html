@@ -121,7 +121,6 @@ class Sudoku extends Component {
         this.render_row = this.render_row.bind(this);
         this.grade_button = this.grade_button.bind(this);
         this.diff_button = this.diff_button.bind(this);
-        this.card = this.card.bind(this);
     }
 
     componentDidMount() { this.generate(Object.keys(kanji)[0], "easy"); }
@@ -133,20 +132,6 @@ class Sudoku extends Component {
         const k = sample(kanji[grade], 9);
 	const read = Object.fromEntries(k.map(kk => [kk, readings[kk] || {kun: "", on: ""}]));
         this.setState({kanji: k, readings: read, board: sudoku_board(), grade: grade, diff: diff})
-    }
-
-    card(k) {
-        return html`
-          <div className="card" key=${ k }>
-              <div className="cardcont">
-                  <div className="stroke">${ k }</div>
-                  <div className="reading">
-                  ${ this.state.readings[k]["kun"] }<br/>
-                  ${ this.state.readings[k]["on"] }
-                  </div>
-              </div>
-          </div>
-        `;
     }
 
     render_row(r) {
@@ -188,7 +173,7 @@ class Sudoku extends Component {
 		kanji grade: ${ this.state.grade }, sudoku: ${ this.state.diff }
             </div>
             <div className="description">
-                ${ this.state.kanji.map(this.card) }
+		${ this.state.kanji.map(glyph => Card(glyph, this.state.readings[glyph])) }
             </div>
             <div className="tabcontainer">
 	    ${ Board(this.state.board, this.state.kanji) }
@@ -206,6 +191,17 @@ const Board = (board, kanji) => html`<table class="sudoku"><tbody>
 // FIXME replace Row/Cell with flexbox or grid
 const Row = (line, kanji) => html`<tr>${ line.split("").map(c => Cell(kanji[c-1])) }</tr>`;
 const Cell = (glyph) => html`<td>${ glyph }</td>`;
+
+const Card = (glyph, reading) => html`
+  <div className="card">
+    <div className="cardcont">
+      <div className="stroke">${ glyph }</div>
+      <div className="reading">
+	${ reading["kun"] }<br/>
+	${ reading["on"] }
+      </div>
+    </div>
+  </div>`;
 
 render(html`<${ Sudoku }/>`, document.querySelector("#container"));
 </script>
