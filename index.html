@@ -81,19 +81,16 @@ tr:last-child { border-bottom: 3px solid; }
 </div>
 
 <script type="module">
-import {html, Component, render} from "https://unpkg.com/htm/preact/standalone.mjs";
+import {html, Component, render, useState} from "https://unpkg.com/htm/preact/standalone.mjs";
 import kanji from "./dat/kanji.js";
 import readings from "./dat/reading.js";
 import sudokus from "./dat/easy.js";
 
-//document.fonts.ready.then((x) => { console.log(x); });
-
 const sample = (text, n) => {
-    const bucket = [...Array(text.length)].map((k, i) => i)
+    const bucket = [...Array(text.length)].map((_, i) => i)
     
     function rand() {
        const idx = Math.floor(Math.random() * bucket.length);
-       // FIXME slice, surely?
        return bucket.splice(idx, 1)[0];
     }
 
@@ -103,28 +100,18 @@ const sample = (text, n) => {
 const difficulties = ["easy", "medium", "hard"];
 const sudoku_board = (diff="easy") => sudokus[Math.floor(Math.random() * sudokus.length)];
 
-class HowTo extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {n:0};
-        this.next = this.next.bind(this);
-    }
-
-    render() {
-        return html`
-            <details className="select-container">
-                <summary>How to use?</summary>
-                <img className=${this.state.n == 0 ? "help" : "hidden"} src="./img/howto1.png" onClick=${this.next}/>
-                <img className=${this.state.n == 1 ? "help" : "hidden"} src="./img/howto2.png" onClick=${this.next}/>
-                <img className=${this.state.n == 2 ? "help" : "hidden"} src="./img/howto3.png" onClick=${this.next}/>
-            </details>
-        `;
-    }
-
-    next() {
-        this.setState({n: (this.state.n + 1) % 3});
-    }
-}
+const HowTo = () => {
+  const [n, set] = useState(0);
+  const next = () => set((n+1)%3);
+  return html`
+    <details className="select-container">
+	<summary>How to use?</summary>
+	${[...new Array(3)].map((_, i) => html`
+	  <img class=${ n===i?"help":"hidden" } src=${ `./img/howto${ i+1 }.png` } onClick=${ next }/>
+	`)}
+    </details>
+  `;
+};
 
 class Sudoku extends Component {
     constructor(props) {
@@ -156,12 +143,12 @@ class Sudoku extends Component {
 
     card(k) {
         return html`
-          <div className="card" key=${k}>
+          <div className="card" key=${ k }>
               <div className="cardcont">
-                  <div className="stroke">${k}</div>
+                  <div className="stroke">${ k }</div>
                   <div className="reading">
-                  ${this.state.readings[k]["kun"]}<br/>
-                  ${this.state.readings[k]["on"]}
+                  ${ this.state.readings[k]["kun"] }<br/>
+                  ${ this.state.readings[k]["on"] }
                   </div>
               </div>
           </div>
@@ -169,18 +156,18 @@ class Sudoku extends Component {
     }
 
     render_cell(c, i) {
-        return html`<td key=${i}>${this.state.kanji[c - 1]}</td>`;
+        return html`<td key=${ i }>${ this.state.kanji[c - 1] }</td>`;
     }
 
     render_row(r, i) {
-        return html`<tr key=${i}>${r.split("").map(this.render_cell)}</tr>`;
+        return html`<tr key=${ i }>${ r.split("").map(this.render_cell) }</tr>`;
     }
 
     grade_button(name) {
         const cb = (ev) => { ev.preventDefault(); this.generate(name, this.state.diff); };
         return html`
-          <div className=${"select-button" + (this.state.grade == name?" selected":"")}
-	       onClick=${cb} key=${name}>${name}</div>
+          <div className=${ "select-button" + (this.state.grade == name?" selected":"") }
+	       onClick=${ cb } key=${ name }>${ name }</div>
         `;
     }
 
@@ -204,27 +191,27 @@ class Sudoku extends Component {
                     <div className="select-title">Sudoku difficulty:</div>
 		    ${difficulties.map(this.diff_button)}
                 </div>
-	    <${HowTo}/>
+	    <${ HowTo }/>
             </div>
             <div className="printonly select-container">
                 <div className="select-title">dimaqq.github.io/kanji-sudoku</div>
-		kanji grade: ${this.state.grade}, sudoku: ${this.state.diff}
+		kanji grade: ${ this.state.grade }, sudoku: ${ this.state.diff }
             </div>
             <div className="description">
-                ${this.state.kanji.map(this.card)}
+                ${ this.state.kanji.map(this.card) }
             </div>
             <div className="tabcontainer">
             <table className="sudoku"><tbody>
-                ${this.state.board.map(this.render_row)}
+                ${ this.state.board.map(this.render_row) }
             </tbody></table>
             </div>
-            <pre className="debug">${"# period state\n" + JSON.stringify(this.state, null, "\t")}</pre>
+            <pre className="debug">${ "# period state\n" + JSON.stringify(this.state, null, "\t") }</pre>
             </div>
         `;
     }
 }
 
-render(html`<${Sudoku}/>`, document.querySelector("#container"));
+render(html`<${ Sudoku }/>`, document.querySelector("#container"));
 </script>
 </body>
 
