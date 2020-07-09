@@ -15,3 +15,9 @@ See [index.html](index.html).
 ### Dev setup
 
 None! 🎉
+
+### Notes
+
+#### Didn't work
+* `styled-components` are amazing, but they depnds on `react`
+* `@emotion/core` doesn't distribute a standalone module
