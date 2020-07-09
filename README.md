@@ -26,3 +26,4 @@ None! 🎉
 #### Didn't work
 * `styled-components` are amazing, but they depnds on `react`
 * `@emotion/core` doesn't distribute a standalone module
+* `aphrodite` doesn't distribute ESM
