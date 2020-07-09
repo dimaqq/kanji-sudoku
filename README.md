@@ -16,6 +16,14 @@ See [index.html](index.html).
 
 None! 🎉
 
+For interactive reload, consider e.g. `npx "Yayure/live-server#master"`
+
+### Build
+
+None! 🎉
+
+Just push to `gh-pages` branch and enjoy GitHub 😸🐙 goodness!
+
 ### Notes
 
 #### To try
