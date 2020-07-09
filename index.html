@@ -7,26 +7,19 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
 <link rel="stylesheet" type="text/css" href="./fnt/font.css" />
 <style type="text/css">
-.stroke { font-family: Kanji Stroke Order; }
+.stroke { font-family: "Kanji Stroke Order"; }
 
-a { text-decoration: none; padding-left: 1em; padding-right: 1em; border-radius: 2px; }
-.active { background-color: #1EAEDB; color: white }
-.registration { max-width: 400px; }
-input:disabled { background:#ccc ! important; border-color: #ccc ! important; text-shadow:none; }
-.debug { line-height: 1.2em; color: #1EAEDB ! important; display: none; }
-.wide { margin-left: 0.2em; margin-right: 0.2em; }
-// .row { width: 100%; }
-//.button { padding: 1em ! important; }
-.one-and-half { width: 8.95%; }
-.small { height: 2em ! important; vertical-align: middle; }
 .select-container { margin: 1em auto; display: table; width: 75vmin; display: flex; }
 .select-title { display: inline-block; margin-right: auto; }
-.select-button { display: inline-block;
-                 border: 1px solid black;
-                 margin-left: -1px; margin-right: 0px;
-                 border-radius: 0;
-                 padding: 0em 1em;
-                 cursor: pointer; }
+.select-button {
+  display: inline-block;
+  border: 1px solid black;
+  margin-left: -1px;
+  margin-right: 0px;
+  border-radius: 0;
+  padding: 0em 1em;
+  cursor: pointer;
+}
 .select-button:hover { background-color: #eee; }
 .selected { background-color: #fcc; }
 
@@ -34,23 +27,32 @@ input:disabled { background:#ccc ! important; border-color: #ccc ! important; te
 .select-button:last-child { border-radius: 0 0.3em 0.3em 0; }
 
 .description { width: 75vmin; height-max: 50vmin; display: table; margin: 1em auto; line-height: 0; }
-.card { display: inline-block;
-        width: 25vmin; box-sizing: border-box;
-        border: 1px solid black; margin: -1px -1px 0 0;
-        line-height: initial;
-        overflow: hidden; }
+.card {
+  display: inline-block;
+  width: 25vmin; box-sizing: border-box;
+  border: 1px solid black; margin: -1px -1px 0 0;
+  line-height: initial;
+  overflow: hidden;
+}
 img.help { box-sixing: border-box; width: 100%; border: 1px solid silver; cursor: pointer; }
 img.hidden { display: none; }
 .cardcont { display: flex; width: 100%; }
 .stroke { display: inline-block; font-size: 8vmin; }
-.reading { display: inline-block; margin-top: 0.5em; width: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reading {
+  display: inline-block;
+  margin-top: 0.5em;
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .kcont, table.sudoku {
     display: table;
     width: 75vmin; height: 75vmin; box-sizing: border-box;
     border-collapse: collapse;
     -webkit-border-horizontal-spacing: 0;
-    -webkit-border-vertical-spacing: 0; 
+    -webkit-border-vertical-spacing: 0;
     margin-left: auto; margin-right: auto; margin-bottom: 1em; }
 td { height: 1.6em; width: 1.6em; border: 1px solid; text-align: center; }
 td, th:first-child, td:first-child, th:last-child, td:last-child { padding: 0.1em 0.1em 0.1em 0.1em; margin: 0 0 0 0; }
@@ -65,19 +67,18 @@ tr:last-child { border-bottom: 3px solid; }
 .select-container { font-size: 2vmin; }
 .description { font-size: 2vmin; }
 
-</style>
-<style type="text/css" media="print">
-.noprint { display: none; }
-</style>
-<style type="text/css" media="screen">
-.printonly { display: none; }
+@media print {
+  .noprint { display: none; }
+}
+
+@media screen {
+  .printonly { display: none; }
+}
 </style>
 </head>
 
 <body>
-
 <div id="container">
-
 </div>
 
 <script type="module">
@@ -88,7 +89,7 @@ import sudokus from "./dat/easy.js";
 
 const sample = (text, n) => {
     const bucket = [...Array(text.length)].map((_, i) => i)
-    
+
     function rand() {
        const idx = Math.floor(Math.random() * bucket.length);
        return bucket.splice(idx, 1)[0];
@@ -178,13 +179,13 @@ class Sudoku extends Component {
             <div className="tabcontainer">
 	    ${ Board(this.state.board, this.state.kanji) }
             </div>
-            <pre className="debug">${ "# period state\n" + JSON.stringify(this.state, null, "\t") }</pre>
             </div>
         `;
     }
 }
 
-const Board = (board, kanji) => html`<table class="sudoku"><tbody>
+const Board = (board, kanji) => html`
+  <table class="sudoku"><tbody>
     ${ board.map(line => Row(line, kanji)) }
   </tbody></table>`;
 
@@ -206,5 +207,4 @@ const Card = (glyph, reading) => html`
 render(html`<${ Sudoku }/>`, document.querySelector("#container"));
 </script>
 </body>
-
 </html>
