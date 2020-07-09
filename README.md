@@ -18,6 +18,11 @@ None! 🎉
 
 ### Notes
 
+#### To try
+* https://github.com/buildbreakdo/style-it
+* https://github.com/streamich/freestyler
+* https://github.com/jxnblk/superstyle
+* https://github.com/jsxstyle/jsxstyle
 #### Didn't work
 * `styled-components` are amazing, but they depnds on `react`
 * `@emotion/core` doesn't distribute a standalone module
